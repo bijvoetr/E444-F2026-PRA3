@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+
+<h1>Chatbot</h1>
+
+<div id="chat-area">
+</div>
+
+<input type="text" id="message">
+
+<button id="send-button">
+    Send
+</button>
+
+<button id="logout-button">
+    Logout
+</button>
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+
+<script>
+document.getElementById("send-button").addEventListener("click", async function() {
+
+    const message = document.getElementById("message").value;
+
+    const response = await fetch("/chat", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            message: message
+        })
+    });
+
+    const data = await response.json();
+
+    document.getElementById("chat-area").innerHTML +=
+        "<p><strong>Bot:</strong> " + data.reply + "</p>";
+});
+</script>
+
+<script>
+document.getElementById("logout-button").addEventListener("click", async function() {
+
+    window.location.href = "/logout";
+
+});
+</script>
+
+{%endblock %}
